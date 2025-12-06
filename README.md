@@ -11,7 +11,6 @@ A comprehensive financial analysis and investment education platform designed to
 **Frontend:** 
 - Next.js – React framework for server-side rendering and API routes
 - Tailwind CSS – Utility-first CSS for rapid UI development
-- Vite – Fast build tool for optimized development workflow
 
 **Backend:** 
 - FastAPI – High-performance Python framework for RESTful APIs

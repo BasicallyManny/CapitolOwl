@@ -4,6 +4,7 @@ import Image from "next/image";
 import logoIMG from '@/app/assets/logo.png'
 import { RxHamburgerMenu, RxCross1 } from "react-icons/rx";
 import { useState } from "react";
+import { motion, AnimatePresence } from 'framer-motion'
 
 const NavBar = () => {
 
@@ -16,7 +17,7 @@ const NavBar = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-transparent z-9999">
+    <motion.header className="fixed top-0 left-0 w-full bg-transparent z-9999"  initial={{ opacity: 0, scale: 0.97, y: -10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.5, ease: "easeOut" }} >
       <div className="flex items-center justify-between px-6 py-4">
 
         {/* Logo */}
@@ -33,13 +34,13 @@ const NavBar = () => {
         </div>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-10 text-white text-lg">
+        <motion.nav className="hidden md:flex items-center gap-10 text-white text-lg" >
           {navElements.map((element) => (
-            <Link key={element.name} href={element.to} className="relative">
+            <Link key={element.name} href={element.to} className="relative hover:scale-120 transition-transform" >
               {element.name}
             </Link>
           ))}
-        </nav>
+        </motion.nav>
 
         {/* Login Button (always visible on desktop, under menu on mobile) */}
         <div className="hidden md:block">
@@ -49,33 +50,46 @@ const NavBar = () => {
         </div>
 
         {/* Mobile Menu Button */}
-        <button
-          className="md:hidden text-white"
+        <motion.button
+          className=" text-white md:hidden"
           onClick={() => setOpen(!open)}
+          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.1 }}
         >
-          {open ? <RxCross1 size={35} /> : <RxHamburgerMenu size={35} />}
-        </button>
+          <AnimatePresence mode="wait">
+            {open ? (
+              <motion.div key="close" initial={{ rotate: -90 }} animate={{ rotate: 0 }} exit={{ rotate: 180 }} transition={{ duration: 0.3 }}>
+                <RxCross1 size={35} />
+              </motion.div>) :
+              <motion.div key="menu" initial={{ rotate: 90 }} animate={{ rotate: 0 }} exit={{ rotate: -180 }} transition={{ duration: 0.3 }}>
+                <RxHamburgerMenu size={35} />
+              </motion.div>
+            }
+          </AnimatePresence>
+        </motion.button>
 
       </div>
 
       {/* Mobile Dropdown Menu */}
-      {open && (
-        <div className="md:hidden bg-black/90 text-white w-full px-6 py-6 space-y-6 absolute top-full left-0">
-          {navElements.map((element) => (
-            <div key={element.name}>
-              <Link href={element.to} className="text-lg">
-                {element.name}
-              </Link>
-            </div>
-          ))}
+      <AnimatePresence>
+        {open && (
+          <motion.div className="md:hidden bg-neutral-secondary-medium text-white w-full px-6 py-6 space-y-6 absolute top-full left-0" variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -20 } }} transition={{ duration: 0.3 }} key="mobile-menu" initial={"hidden"} animate={"visible"} exit={"hidden"}>
+            {navElements.map((element) => (
+              <motion.div key={element.name} initial={"hidden"} animate={"visible"} exit={"exit"} whileHover={{x:10, transition:{duration:0.3}}} whileTap={{ scale: 0.95 }} className="overflow-hidden">
+                <Link href={element.to} className="text-lg">
+                  {element.name}
+                </Link>
+              </motion.div>
+            ))}
 
-          {/* Mobile Login Button */}
-          <button className="text-white text-lg">
-            Login
-          </button>
-        </div>
-      )}
-    </header>
+            {/* Mobile Login Button */}
+            <button className="text-white text-lg">
+              Login
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 };
 
