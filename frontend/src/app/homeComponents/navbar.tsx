@@ -25,7 +25,7 @@ const NavBar = () => {
           <Link href="/">
             <Image
               src={logoIMG.src}
-              alt="logo"
+              alt="Capitol Owl"
               width={70}
               height={70}
               loading="lazy"
