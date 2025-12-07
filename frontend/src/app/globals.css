@@ -2,8 +2,8 @@
 
 
 :root {
-  --background: #171717;
-  --foreground: #171717;
+  --background: #0A0E1A;
+  --foreground: #0A0E1A;
 }
 
 :root inline {
@@ -15,7 +15,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #0A0E1A;
     --foreground: #ededed;
   }
 }
