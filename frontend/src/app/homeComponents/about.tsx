@@ -1,25 +1,32 @@
 
+'use client'
+
+
 import Image from "next/image";
 import analysisIMG from '@/app/assets/aboutImages/analysis.png'
 import investIMG from '@/app/assets/aboutImages/invest.png'
 import shareIMG from '@/app/assets/aboutImages/share.png'
+import {motion} from 'framer-motion'
 const About = () => {
     return (
         <div id="AboutContainer" className="overflow-hidden">
             {/* Header Text */}
-            <div id="aboutTextWrapper" className="flex flex-col items-center justify-center text-white py-5 gap-2.5">
+            <motion.div id="aboutTextWrapper" className="flex flex-col items-center justify-center text-white py-5 gap-2.5" initial={{ opacity: 0, scale: 0.97, y: -10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.5, ease: "easeOut" }}>
                 <h1 className="text-center font-bold text-2xl w-5/6 sm:w-2/3 md:w-3/4 md:text-3xl">
                     Think of us as the bridge between confusion and confidence.
                 </h1>
                 <p className="text-center text-sm sm:text-base w-3/4 md:w-2/3">
                     Learn, analyze, and invest with clarity
                 </p>
-            </div>
+            </motion.div>
 
             {/* Cards Wrapper */}
-            <div
+            <motion.div
                 id="aboutCards"
                 className="flex flex-col md:flex-row justify-center items-stretch py-5 px-6 md:px-5 gap-5"
+                initial={{ opacity: 0, scale: 0.97, y: -10 }} 
+                animate={{ opacity: 1, scale: 1, y: 0 }} 
+                transition={{ duration: 0.7, ease: "easeOut" }}
             >
                 {/* Left Column (md only vertical stack) */}
                 <div className="flex flex-col gap-5 w-full md:w-2/5">
@@ -85,7 +92,7 @@ const About = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </div>
 
     )
