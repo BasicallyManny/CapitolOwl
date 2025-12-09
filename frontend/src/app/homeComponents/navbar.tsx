@@ -5,9 +5,11 @@ import logoIMG from '@/app/assets/logo.png'
 import { RxHamburgerMenu, RxCross1 } from "react-icons/rx";
 import { useState } from "react";
 import { motion, AnimatePresence } from 'framer-motion'
+import { usePathname } from 'next/navigation'
 
 const NavBar = () => {
 
+  const pathname = usePathname()
   const navElements = [
     { name: "Markets", to: "/markets" },
     { name: "Stocks", to: "/stocks" },
@@ -24,19 +26,18 @@ const NavBar = () => {
         <div className="flex items-center">
           <Link href="/">
             <Image
-              src={logoIMG.src}
+              src={logoIMG}
               alt="Capitol Owl"
               width={70}
               height={70}
-              loading="lazy"
+              priority
             />
           </Link>
         </div>
-
         {/* Desktop Nav */}
-        <motion.nav className="hidden md:flex items-center gap-10 text-white text-lg" >
+        <motion.nav className="hidden md:flex items-center gap-10 text-white text-lg " >
           {navElements.map((element) => (
-            <Link key={element.name} href={element.to} className="relative hover:scale-120 transition-transform" >
+            <Link key={element.name} href={element.to} className={`relative hover:scale-125 transition-transform ${pathname === element.to ? "font-bold underline text-[#10B981]" : ""}`} >
               {element.name}
             </Link>
           ))}
@@ -73,10 +74,10 @@ const NavBar = () => {
       {/* Mobile Dropdown Menu */}
       <AnimatePresence>
         {open && (
-          <motion.div className="md:hidden bg-neutral-secondary-medium text-white w-full px-6 py-6 space-y-6 absolute top-full left-0" variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -20 } }} transition={{ duration: 0.3 }} key="mobile-menu" initial={"hidden"} animate={"visible"} exit={"hidden"}>
+          <motion.div className="md:hidden bg-[#0A0E1A] text-white w-full px-6 py-6 space-y-6 absolute top-full left-0" variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -20 } }} transition={{ duration: 0.3 }} key="mobile-menu" initial={"hidden"} animate={"visible"} exit={"hidden"}>
             {navElements.map((element) => (
               <motion.div key={element.name} initial={"hidden"} animate={"visible"} exit={"exit"} whileHover={{x:10, transition:{duration:0.3}}} whileTap={{ scale: 0.95 }} className="overflow-hidden">
-                <Link href={element.to} className="text-lg">
+                <Link href={element.to} className={`text-lg ${pathname === element.to ? "font-bold underline text-[#10B981]" : ""}`}>
                   {element.name}
                 </Link>
               </motion.div>
