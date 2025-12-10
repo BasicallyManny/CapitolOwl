@@ -1,7 +1,7 @@
-const communityPage = () => {
+const CommunityPage = () => {
     return (
         <div>community</div>
     )
 }
 
-export default communityPage
+export default CommunityPage

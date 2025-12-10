@@ -4,6 +4,7 @@ import "./globals.css";
 
 //layout component imports
 import Navbar from "./homeComponents/navbar";
+import Footer from "./homeComponents/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,10 +30,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased content min-h-screen flex flex-col`}
       >
         <Navbar />
-        {children}
+        {/* Main content expands to push footer down */}
+        <main className="flex justify-center items-center grow">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
