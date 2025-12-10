@@ -1,15 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import STONKS from "@/app/assets/carouselImages/STONKS.png";
 import LEARN from "@/app/assets/carouselImages/learn.svg";
 import UNDERSTAND from "@/app/assets/carouselImages/understand.svg";
 import VISUALIZE from "@/app/assets/carouselImages/visualize.svg";
 import CapitolOwlLogo_1 from "@/app/assets/carouselImages/CapitolOwlLogo_1.svg"
 import type { StaticImageData } from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
 
 const Hero = () => {
     const images: Array<{ image: StaticImageData, HeroText: string, description: string }> = [
@@ -36,73 +34,60 @@ const Hero = () => {
         {
             image: CapitolOwlLogo_1,
             HeroText: "Ready to Invest Smarter?",
-            description: "Start your making smarter decisions today",
+            description: "Start making smarter decisions today",
         },
     ];
 
     const [currentImage, setCurrentImage] = useState(0);
-
+    const imagesLength = useMemo(() => images.length, [images.length]); // Memoize the length
     const goToSlide = (index: number) => {
-        setCurrentImage(index)
-    }
+        setCurrentImage(index);
+    };
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentImage((currentImage + 1) % images.length);
+            setCurrentImage((prev) => (prev + 1) % images.length);
         }, 5000);
         return () => clearInterval(interval);
-    }, [currentImage, images.length]);
+    }, [currentImage, images.length, imagesLength]);
 
     return (
-        <div id="HeroContainer" className="h-screen w-screen flex flex-col justify-center items-center bg-[#0A0E1A]">
-            <div id="carouselContainer" className="w-full h-full flex ">
-                {/* LEFT IMAGE AREA */}
-                <div id="heroImage" className="w-1/2 h-full relative">
-                    <AnimatePresence mode="wait">
-                        <motion.div className="absolute top-0 left-0 w-full h-full" key={currentImage} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
-                            {/* IMAGE OVERLAY */}
-                            <Image
-                                src={images[currentImage].image}
-                                alt="Hero image"
-                                fill
-                                className="object-cover flex items-center justify-center"
-                                style={{
-                                    maskImage: `linear-gradient(to bottom, black 0%, transparent 100%), linear-gradient(to right, black 0%, transparent 100%), linear-gradient(to top, black 0%, transparent 100%) `,
-                                    WebkitMaskImage: `linear-gradient(to bottom, black 0%, transparent 100%), linear-gradient(to right, black 0%, transparent 100%), linear-gradient(to top, black 0%, transparent 100%)`,
-                                    maskComposite: 'intersect',
-                                    WebkitMaskComposite: 'source-in'
-                                }}
-                            />
-
-                        </motion.div>
-                    </AnimatePresence>
-                </div>
-                {/* RIGHT SIDE TEXT */}
-                <div id="heroRight" className="w-1/2 h-full flex justify-center items-center">
-                    {/*HERO TEXT AREA*/}
-                    <AnimatePresence mode="wait">
-                        <motion.div id="TextContainer" className="font-extrabold flex flex-col space-y-6 p-7.5" key={currentImage} initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.5 }}>
-                            <div id="HeroTitle" className="text-5xl text-white">
-                                {images[currentImage].HeroText}
-                            </div>
-                            <div id="HeroDescription" className="text-xl text-[#9CA3AF]">
-                                {images[currentImage].description}
-                            </div>
-                        </motion.div>
-                    </AnimatePresence>
-                </div>
+        <div id="HeroContainer" className="relative h-screen w-screen bg-[#0A0E1A]">
+            {/* TEXT CONTENT LAYER */}
+            <div className="relative z-20 h-full flex items-center justify-center px-6 md:px-12">
+                <AnimatePresence mode="wait">
+                    <motion.div 
+                        id="TextContainer" 
+                        className="font-extrabold flex flex-col space-y-4 md:space-y-6 text-center max-w-4xl" 
+                        key={currentImage} 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <h1 className="text-4xl md:text-6xl lg:text-7xl text-white">
+                            {images[currentImage].HeroText}
+                        </h1>
+                        <p className="text-lg md:text-2xl text-gray-200">
+                            {images[currentImage].description}
+                        </p>
+                    </motion.div>
+                </AnimatePresence>
             </div>
+
             {/* DOTS */}
-            <div id="carouselDots" className="absolute bottom-8 justify-center items-center text-white space-x-1.5">
-                {images.map((_, element) => (
-                    <button key={element} className={`h-3 rounded-full transition-all ${element === currentImage
-                        ? 'bg-white w-8'
-                        : 'bg-white/50 w-3 hover:bg-white/75'
-                        }`} onClick={() => goToSlide(element)}>
-                    </button>
+            <div id="carouselDots" className="absolute bottom-30 left-1/2 -translate-x-1/2 flex gap-3 z-30">
+                {images.map((_, index) => (
+                    <button 
+                        key={index} 
+                        className={`h-3 rounded-full transition-all ${
+                            index === currentImage
+                                ? 'bg-white w-8'
+                                : 'bg-white/50 w-3 hover:bg-white/75'
+                        }`} 
+                        onClick={() => goToSlide(index)}
+                        aria-label={`Go to slide ${index + 1}`}
+                    />
                 ))}
             </div>
         </div>
