@@ -7,7 +7,8 @@ import UNDERSTAND from "@/app/assets/carouselImages/understand.svg";
 import VISUALIZE from "@/app/assets/carouselImages/visualize.svg";
 import CapitolOwlLogo_1 from "@/app/assets/carouselImages/CapitolOwlLogo_1.svg"
 import type { StaticImageData } from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 
 const Hero = () => {
@@ -45,49 +46,62 @@ const Hero = () => {
         setCurrentImage(index)
     }
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentImage((currentImage + 1) % images.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [currentImage, images.length]);
+
     return (
         <div id="HeroContainer" className="h-screen w-screen flex flex-col justify-center items-center bg-[#0A0E1A]">
             <div id="carouselContainer" className="w-full h-full flex ">
                 {/* LEFT IMAGE AREA */}
                 <div id="heroImage" className="w-1/2 h-full relative">
+                    <AnimatePresence mode="wait">
+                        <motion.div className="absolute top-0 left-0 w-full h-full" key={currentImage} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
+                            {/* IMAGE OVERLAY */}
+                            <Image
+                                src={images[currentImage].image}
+                                alt="Hero image"
+                                fill
+                                className="object-cover flex items-center justify-center"
+                                style={{
+                                    maskImage: `linear-gradient(to bottom, black 0%, transparent 100%), linear-gradient(to right, black 0%, transparent 100%), linear-gradient(to top, black 0%, transparent 100%) `,
+                                    WebkitMaskImage: `linear-gradient(to bottom, black 0%, transparent 100%), linear-gradient(to right, black 0%, transparent 100%), linear-gradient(to top, black 0%, transparent 100%)`,
+                                    maskComposite: 'intersect',
+                                    WebkitMaskComposite: 'source-in'
+                                }}
+                            />
 
-                    <div className="absolute top-0 left-0 w-full h-full">
-                        {/* IMAGE OVERLAY */}
-                        <Image
-                            src={images[currentImage].image}
-                            alt="Hero image"
-                            fill
-                            className="object-cover flex items-center justify-center"
-                            style={{
-                                maskImage: `linear-gradient(to bottom, black 0%, transparent 100%), linear-gradient(to right, black 0%, transparent 100%), linear-gradient(to top, black 0%, transparent 100%) `,
-                                WebkitMaskImage: `linear-gradient(to bottom, black 0%, transparent 100%), linear-gradient(to right, black 0%, transparent 100%), linear-gradient(to top, black 0%, transparent 100%)`,
-                                maskComposite: 'intersect',
-                                WebkitMaskComposite: 'source-in'
-                            }}
-                        />
-
-                    </div>
-
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
                 {/* RIGHT SIDE TEXT */}
                 <div id="heroRight" className="w-1/2 h-full flex justify-center items-center">
                     {/*HERO TEXT AREA*/}
-
-                    <div id="TextContainer" className="font-extrabold flex flex-col space-y-6 p-7.5">
-                        <div id="HeroTitle" className="text-5xl text-white">
-                            {images[currentImage].HeroText}
-                        </div>
-                        <div id="HeroDescription" className="text-xl text-[#9CA3AF]">
-                            {images[currentImage].description}
-                        </div>
-                    </div>
-
+                    <AnimatePresence mode="wait">
+                        <motion.div id="TextContainer" className="font-extrabold flex flex-col space-y-6 p-7.5" key={currentImage} initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.5 }}>
+                            <div id="HeroTitle" className="text-5xl text-white">
+                                {images[currentImage].HeroText}
+                            </div>
+                            <div id="HeroDescription" className="text-xl text-[#9CA3AF]">
+                                {images[currentImage].description}
+                            </div>
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
             </div>
             {/* DOTS */}
-            <div id="carouselDots" className="absolute bottom-8 justify-center items-center text-white">
+            <div id="carouselDots" className="absolute bottom-8 justify-center items-center text-white space-x-1.5">
                 {images.map((_, element) => (
-                    <button key={element} className="border-[#686868] border-2 w-5 h-6 mx-2" onClick={() => goToSlide(element)}>
+                    <button key={element} className={`h-3 rounded-full transition-all ${element === currentImage
+                        ? 'bg-white w-8'
+                        : 'bg-white/50 w-3 hover:bg-white/75'
+                        }`} onClick={() => goToSlide(element)}>
                     </button>
                 ))}
             </div>
