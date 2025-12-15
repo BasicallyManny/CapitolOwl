@@ -1,0 +1,14 @@
+from typing import Optional
+from pydantic import BaseModel
+from userSchema import user
+from typing import Set
+
+class BlogPost(BaseModel):
+    cleark_id:Optional[user]
+    post_id:Optional[str]
+    title:Optional[str]
+    subtitle:Optional[str]
+    likes:Optional[Likes]
+
+class Likes(BaseModel):
+    likes:Optional[Set[str]]
